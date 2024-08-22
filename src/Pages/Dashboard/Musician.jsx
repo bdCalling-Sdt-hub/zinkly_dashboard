@@ -5,7 +5,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import Swal from "sweetalert2";
 import Title from "../../Shared/Title"
 import { RiDeleteBin6Line } from "react-icons/ri"; 
-import userImg from "../../assets/user.jpg"
+import userImg from "../../assets/user.png"
 import UserDetailsModal from "../../Components/UserDetailsModal";
 import MusicianModal from "../../Components/MusicianModal";
 const data = [
