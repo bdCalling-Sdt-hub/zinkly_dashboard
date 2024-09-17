@@ -26,7 +26,7 @@ const Login = () => {
         navigate("/");
       }
     } catch (error) {
-      console.log(error, "from login user");
+      // console.log(error, "from login user");
 
       notification.error({
         message:

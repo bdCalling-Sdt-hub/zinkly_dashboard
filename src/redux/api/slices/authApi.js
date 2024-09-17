@@ -47,11 +47,14 @@ export const authApi = baseApi.injectEndpoints({
     }),
     resetPassword: build.mutation({
       query: (data) => {
-        // const token = localStorage.getItem("accessToken");
+        const token = localStorage.getItem("token");
         return {
           url: "/auth/reset-password",
           method: "POST",
           body: data,
+          headers: {
+            Authorization: `${token}`,
+          },
         };
       },
     }),

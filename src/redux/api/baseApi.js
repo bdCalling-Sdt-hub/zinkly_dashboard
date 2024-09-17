@@ -6,12 +6,12 @@ export const baseApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://192.168.10.195:5001/api/v1",
     // credentials: "include",
-    // prepareHeaders: (header) => {
-
-    //   if (token) {
-    //     header.set("Authorization", `Bearer ${token}`);
-    //   }
-    // },
+    prepareHeaders: (header) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        header.set("Authorization", `Bearer ${token}`);
+      }
+    },
   }),
   tagTypes: ["Faq", "User", "Privacy-Policy"],
   endpoints: () => ({}),
