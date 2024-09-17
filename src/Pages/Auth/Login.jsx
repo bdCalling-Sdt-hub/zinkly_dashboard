@@ -1,22 +1,48 @@
-
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, notification } from "antd";
 import React from "react";
-import { useNavigate } from "react-router"; 
-import loginImg from "../../assets/Login.png"
+import { useNavigate } from "react-router";
+import loginImg from "../../assets/Login.png";
+import { useLoginUserMutation } from "../../redux/api/slices/authApi";
+import { storeToken } from "../../lib/tokenManagement";
 const Login = () => {
-  const onFinish = (values) => {
-    console.log("Received values of form: ", values);
-  };
-
   const navigate = useNavigate();
+  const [loginUser, { isLoading }] = useLoginUserMutation();
+  const onFinish = async (values) => {
+    const loginUserInfo = {
+      email: values.email,
+      password: values.password,
+      rememberMe: values.remember,
+    };
 
+    // // login user
+    try {
+      const res = await loginUser(loginUserInfo).unwrap();
+      if (res.success) {
+        notification.success({
+          message: res.message,
+          duration: 2,
+        });
+        storeToken(res.data.token);
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error, "from login user");
+
+      notification.error({
+        message:
+          (error.data && error.data.message) ||
+          "Something went wrong while logging!!!",
+        duration: 2,
+      });
+    }
+  };
   return (
     <div
       style={{
         width: "100%",
-       backgroundImage:`url(${loginImg})` , 
-       backgroundRepeat: "no-repeat", 
-       backgroundSize:"cover",
+        backgroundImage: `url(${loginImg})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
         height: "100vh",
         display: "flex",
         alignItems: "center",
@@ -24,8 +50,6 @@ const Login = () => {
         position: "relative",
       }}
     >
- 
-
       <Form
         name="normal_login"
         className="login-form"
@@ -42,7 +66,15 @@ const Login = () => {
         }}
         onFinish={onFinish}
       >
-        <h1 style={{ fontSize: "32px", color: "black", textAlign: "center" , fontWeight:500 , marginBottom:"10px" }}>
+        <h1
+          style={{
+            fontSize: "32px",
+            color: "black",
+            textAlign: "center",
+            fontWeight: 500,
+            marginBottom: "10px",
+          }}
+        >
           Login in to Account
         </h1>
         <div style={{ marginBottom: "24px" }}>
@@ -129,8 +161,7 @@ const Login = () => {
         </div>
 
         <Form.Item style={{ marginBottom: 0 }}>
-          <Button 
-          onClick={()=>navigate('/')}
+          <Button
             type="primary"
             htmlType="submit"
             className="login-form-button"
@@ -143,7 +174,7 @@ const Login = () => {
               marginTop: "56px",
             }}
           >
-            Sign In
+            {isLoading ? "Loading..." : " Sign In"}
           </Button>
         </Form.Item>
       </Form>
