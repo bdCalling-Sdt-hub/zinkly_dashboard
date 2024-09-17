@@ -7,16 +7,23 @@ import Swal from "sweetalert2";
 import Modal from "../../../Components/Modal";
 import {
   useAddCategoryMutation,
+  useDeleteCategoryMutation,
   useGetCategoryQuery,
+  useUpdateCategoryMutation,
 } from "../../../redux/api/slices/categoryApi";
 import { imageUrl } from "../../../redux/api/baseApi";
-import AddCategory from "../../../Components/Form/AddCategory";
+import AddCategory from "../../../Components/Form/AddCategoryForm";
+import UpdateCategoryForm from "../../../Components/Form/UpdateCategoryForm";
 
 const Category = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [updateModal, setUpdateModal] = useState(false);
   const [addCategory] = useAddCategoryMutation();
   const { data: categories } = useGetCategoryQuery({});
-  console.log(categories);
+  const [deleteCategory] = useDeleteCategoryMutation();
+  const [updateCategory] = useUpdateCategoryMutation();
+  const [updateId, setUpdateId] = useState(null);
+
   const [form] = Form.useForm();
   const [page, setPage] = useState(
     new URLSearchParams(window.location.search).get("page") || 1
@@ -31,15 +38,18 @@ const Category = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes",
       cancelButtonText: "No",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your file has been deleted.",
-          icon: "success",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        const res = await deleteCategory(id).unwrap();
+        if (res.success) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your file has been deleted.",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
       }
     });
   };
@@ -80,70 +90,40 @@ const Category = () => {
       });
     }
   };
+  //update category to backend
+  const handleUpdateCategory = async (values) => {
+    const categoryInfo = {
+      categoryName: values.title,
+      image: values.image.file,
+    };
 
-  // const addCategoryForm = (
-  //   <Form form={form} onFinish={handleAddCategory}>
-  //     <div>
-  //       <p className="text-[#6D6D6D] py-1">Category Name</p>
-  //       <Form.Item
-  //         name="title"
-  //         rules={[
-  //           {
-  //             required: true,
-  //             message: "Please input category name",
-  //           },
-  //         ]}
-  //       >
-  //         <Input
-  //           className="w-[100%] border outline-none px-3 py-[10px]"
-  //           type="text"
-  //         />
-  //       </Form.Item>
-  //     </div>
-  //     <div>
-  //       <p className="text-[#6D6D6D] py-1">Category Image</p>
+    const formData = new FormData();
+    formData.append("categoryName", categoryInfo.categoryName);
+    formData.append("image", categoryInfo.image);
 
-  //       <label
-  //         htmlFor="image"
-  //         style={{ display: "block", margin: "4px 0" }}
-  //         className="p-3 border"
-  //       >
-  //         <Form.Item>
-  //           <div className="flex justify-center items-center w-full h-full border-dashed border border-black py-10">
-  //             {imgFile ? (
-  //               <img src={URL.createObjectURL(imgFile)} alt="" />
-  //             ) : (
-  //               //  : itemForEdit?.category_image ? (
-  //               //   <img src={`${ServerUrl}${itemForEdit?.category_image}`} alt="" />
-  //               // )
-  //               <FaRegImage className="text-2xl" />
-  //             )}
-  //           </div>
+    const updateData = {
+      data: formData,
+      id: updateId,
+    };
+    try {
+      const res = await updateCategory(updateData).unwrap();
 
-  //           <div className="hidden">
-  //             <Input
-  //               id="image"
-  //               type="file"
-  //               onInput={handleChange}
-  //               style={{
-  //                 border: "1px solid #E0E4EC",
-  //                 height: "52px",
-  //                 background: "white",
-  //                 borderRadius: "8px",
-  //                 outline: "none",
-  //               }}
-  //             />
-  //           </div>
-  //         </Form.Item>
-  //       </label>
-  //     </div>
-  //     <div className="text-center mt-6">
-  //       <button className="bg-[#2461CB] px-6 py-3 w-full text-[#FEFEFE] rounded-md">
-  //         Confirm
-  //       </button>
-  //     </div>
-  //   </Form>
-  // );
+      if (res.success) {
+        setUpdateModal(false);
+        notification.success({
+          message: res.message,
+          duration: 2,
+        });
+      }
+    } catch (error) {
+      notification.error({
+        message:
+          (error.data && error.data.message) ||
+          "Something went wrong while update category!!!",
+        duration: 2,
+      });
+    }
+  };
 
   ///colum
   const columns = [
@@ -206,7 +186,8 @@ const Category = () => {
         >
           <button
             onClick={() => {
-              setOpenModal(true);
+              setUpdateModal(true);
+              setUpdateId(record._id);
             }}
             style={{
               cursor: "pointer",
@@ -226,7 +207,7 @@ const Category = () => {
               background: "white",
               color: "#808080",
             }}
-            onClick={() => handleDelete(record?.key)}
+            onClick={() => handleDelete(record?._id)}
           >
             <FaRegTrashAlt size={20} />
           </button>
@@ -302,6 +283,16 @@ const Category = () => {
         setOpen={setOpenModal}
         width={500}
         key={"category-modal"}
+      />
+      <Modal
+        title={"Update Category"}
+        body={
+          <UpdateCategoryForm handleUpdateCategory={handleUpdateCategory} />
+        }
+        open={updateModal}
+        setOpen={setUpdateModal}
+        width={500}
+        key={"category-modal-update"}
       />
     </div>
   );
