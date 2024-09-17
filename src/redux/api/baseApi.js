@@ -13,6 +13,8 @@ export const baseApi = createApi({
       }
     },
   }),
-  tagTypes: ["Faq", "User", "Privacy-Policy"],
+  tagTypes: ["Faq", "User", "Privacy-Policy", "Category"],
   endpoints: () => ({}),
 });
+
+export const imageUrl = "http://192.168.10.195:5001/";

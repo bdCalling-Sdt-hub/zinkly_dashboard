@@ -32,15 +32,15 @@
   border: 0;
 }
 
-.ant-pagination .ant-pagination-item-active a{
-  background-color: #6C6C6C ;
+.ant-pagination .ant-pagination-item-active a {
+  background-color: #6c6c6c;
   color: white !important;
-} 
-.ant-pagination .ant-pagination-item-active a:hover{
+}
+.ant-pagination .ant-pagination-item-active a:hover {
   color: "white" !important;
 }
 
-.ant-pagination .ant-pagination-item a{
+.ant-pagination .ant-pagination-item a {
   border-radius: 8px !important;
 }
 
@@ -49,27 +49,32 @@
   border-radius: 8px !important;
 }
 
-:where(.css-dev-only-do-not-override-17a39f8).ant-input-affix-wrapper:hover{
-  border-color:  #E0E4EC !important;
+:where(.css-dev-only-do-not-override-17a39f8).ant-input-affix-wrapper:hover {
+  border-color: #e0e4ec !important;
 }
-:where(.css-dev-only-do-not-override-17a39f8).ant-input:hover{
-  border-color:  #E0E4EC !important;
+:where(.css-dev-only-do-not-override-17a39f8).ant-input:hover {
+  border-color: #e0e4ec !important;
 }
-:where(.css-dev-only-do-not-override-17a39f8).ant-btn-default:hover{
+:where(.css-dev-only-do-not-override-17a39f8).ant-btn-default:hover {
   border-color: none !important;
 }
 
 /* btn custom color change */
-:where(.css-dev-only-do-not-override-17a39f8).ant-btn:hover{
+:where(.css-dev-only-do-not-override-17a39f8).ant-btn:hover {
   border-color: none !important;
 }
 
-.slider-container{
+.slider-container {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 30px;
 }
-.ant-upload-select{
+.ant-upload-select {
   width: 100% !important;
   height: 190px !important;
+}
+
+.ant-upload-select {
+  height: 20px !important;
+  margin-bottom: 30px !important;
 }
