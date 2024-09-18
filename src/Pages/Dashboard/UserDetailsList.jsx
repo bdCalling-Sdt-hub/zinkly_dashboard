@@ -1,148 +1,44 @@
-import React, {  useState } from "react";
-import { Input,  Table } from "antd";  
+import React, { useCallback, useState } from "react";
+import { Input, Table } from "antd";
 import { GoArrowUpRight } from "react-icons/go";
 import { IoSearchOutline } from "react-icons/io5";
 import Swal from "sweetalert2";
-import Title from "../../Shared/Title"
-import { RiDeleteBin6Line } from "react-icons/ri"; 
-import userImg from "../../assets/user.png"
+import Title from "../../Shared/Title";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import UserDetailsModal from "../../Components/UserDetailsModal";
-const data = [
-  {
-    key: "#1239",
-
-    user: {
-      name: "Mr. Mahmud",
-      img: userImg,
-    },
-    email: "mr101@mail.ru",
-    contact: "(+33)7 00 55 59 27",
-    
-  },
-  {
-    key: "#1238",
-
-    user: {
-      name: "Lily",
-      img: userImg,
-    },
-    email: "xterris@gmail.com",
-    contact: "(+33)7 00 55 59 27",
-   
-  },
-  {
-    key: "#1237",
-
-    user: {
-      name: "Kathry",
-      img: userImg,
-    },
-    email: "irnabela@gmail.com",
-    contact: "(+33)7 00 55 59 27",
-    
-  },
-  {
-    key: "#1236",
-
-    user: {
-      name: "Priscilla",
-      img: userImg,
-    },
-    email: "codence@gmail.com",
-    contact: "(+33)7 00 55 59 27",
-   
-  },
-  {
-    key: "#1235",
-
-    user: {
-      name: "Claire",
-      img: userImg,
-    },
-    email: "quasiah@gmail.com",
-    contact: "(+33)7 00 55 59 27",
-  }, 
-
-  {
-    key: "#1234",
-
-    user: {
-      name: "Irmar",
-      img: userImg,
-    },
-    email: "xeno@yandex.ru",
-    contact: "(+33)7 00 55 59 27",
-  },
-  {
-    key: "#1233",
-
-    user: {
-      name: "Gloria",
-      img: userImg,
-    },
-    email: "redaniel@gmail.com",
-    contact: "(+33)7 00 55 59 27",
-   
-  },
-  {
-    key: "#1233",
-
-    user: {
-      name: "Gloria",
-      img: userImg,
-    },
-    email: "redaniel@gmail.com",
-    contact: "(+33)7 00 55 59 27",
-   
-  },
-  {
-    key: "#1233",
-
-    user: {
-      name: "Gloria",
-      img: userImg ,
-    },
-    email: "redaniel@gmail.com",
-    contact: "(+33)7 00 55 59 27",
-   
-  },
-  {
-    key: "#1233",
-
-    user: {
-      name: "Gloria",
-      img: userImg,
-    },
-    email: "redaniel@gmail.com",
-    contact: "(+33)7 00 55 59 27",
- 
-  },
- 
-];
-
+import { useGetUsersQuery } from "../../redux/api/slices/userApi";
+import { imageUrl } from "../../redux/api/baseApi";
+import _ from "lodash";
 const UserDetailsList = () => {
-
   const [page, setPage] = useState(
     new URLSearchParams(window.location.search).get("page") || 1
   );
-const [open,setOpen]=useState(false) 
-const [modalData , SetModalData] = useState(null)
+  const [search, setSearch] = useState("");
+
+  const { data: users, isFetching } = useGetUsersQuery([
+    // { name: "limit", value: 2 },
+    { name: "page", value: 1 },
+    { name: "search", value: search },
+  ]);
+
+  const [open, setOpen] = useState(false);
+  const [modalData, SetModalData] = useState(null);
 
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Are you sure?",
+      title: id,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes",
       cancelButtonText: "No",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
         Swal.fire({
           title: "Deleted!",
-          text: "Your file has been deleted.",
-          icon: "success",
+          text: "Backend api not provided!",
+          icon: "error",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -150,19 +46,20 @@ const [modalData , SetModalData] = useState(null)
     });
   };
 
-
-
   const columns = [
     {
       title: "S.No",
-      dataIndex: "key",
-      key: "key",
+      dataIndex: "_id",
+      key: "_id",
+      render: (_, record, index) => {
+        return <p>{index + 1}</p>;
+      },
     },
     {
       title: "User",
-      dataIndex: "user",
-      key: "user",
-      render: (user) => {
+      dataIndex: "name",
+      key: "name",
+      render: (_, record) => {
         return (
           <div
             style={{
@@ -178,7 +75,7 @@ const [modalData , SetModalData] = useState(null)
                 borderRadius: 8,
                 backgroundSize: "cover",
               }}
-              src={user?.img}
+              src={`${imageUrl}/${record?.profile}`}
               alt="ok"
             />
             <p
@@ -188,7 +85,7 @@ const [modalData , SetModalData] = useState(null)
                 fontWeight: "400",
               }}
             >
-              {user?.name}
+              {record?.name}
             </p>
           </div>
         );
@@ -204,28 +101,31 @@ const [modalData , SetModalData] = useState(null)
       title: "Contact Number",
       dataIndex: "contact",
       key: "contact",
+      render: (contact) => {
+        return <p>{contact ? contact : "----------"}</p>;
+      },
     },
     {
       title: "Action",
       dataIndex: "action",
       key: "action",
       render: (_, record) => (
-        <div
-        className=" flex items-center gap-2 "
-        >
+        <div className=" flex items-center gap-2 ">
           <button
-           onClick={()=>{setOpen(true) , SetModalData(record)}}
+            onClick={() => {
+              setOpen(true), SetModalData(record);
+            }}
             style={{
               cursor: "pointer",
               border: "none",
               outline: "none",
             }}
           >
-           <GoArrowUpRight className="text-xl font-semibold text-[#2461CB]" />
-          </button> 
+            <GoArrowUpRight className="text-xl font-semibold text-[#2461CB]" />
+          </button>
 
-          <button onClick={()=>handleDelete(record?.key)}>
-          <RiDeleteBin6Line  className="text-xl font-semibold text-red-500" />
+          <button onClick={() => handleDelete(record?._id)}>
+            <RiDeleteBin6Line className="text-xl font-semibold text-red-500" />
           </button>
         </div>
       ),
@@ -238,15 +138,30 @@ const [modalData , SetModalData] = useState(null)
     params.set("page", page);
     window.history.pushState(null, "", `?${params.toString()}`);
   };
+  //debounce for search
+  const debouncedSearch = useCallback(
+    _.debounce((searchText) => {
+      setSearch(searchText);
+    }, 500),
+    []
+  );
 
-
+  // Handle search input change
+  const handleSearch = (e) => {
+    debouncedSearch(e.target.value);
+  };
   return (
-    <div>  
-      <div className=" flex  items-center justify-between my-3"> 
-      <Title className="">Users</Title>
-      <Input  placeholder="Search Something...." prefix={<IoSearchOutline className="text-2xl text-gray-400" />} style={{ width:"400px" , height:"45px"}} />
+    <div>
+      <div className=" flex  items-center justify-between my-3">
+        <Title className="">Users</Title>
+        <Input
+          onChange={handleSearch}
+          placeholder="Search Something...."
+          prefix={<IoSearchOutline className="text-2xl text-gray-400" />}
+          style={{ width: "400px", height: "45px" }}
+        />
       </div>
-     
+
       <div
         style={{
           background: "white",
@@ -254,34 +169,24 @@ const [modalData , SetModalData] = useState(null)
           borderRadius: "12px",
         }}
       >
-        
         <div>
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={users?.data}
             pagination={{
               pageSize: 10,
               defaultCurrent: parseInt(page),
               onChange: handlePageChange,
-              total: 85,
+              total: users?.meta?.total,
               showTotal: (total, range) =>
                 `Showing ${range[0]}-${range[1]} out of ${total}`,
               defaultPageSize: 20,
               // defaultCurrent: 1,
-              style: {
-                marginBottom: 20,
-                marginLeft: 20,
-                marginRight: 20,
-                width: "100%",
-                display: "flex",
-                // gap: 10,
-                // justifyContent: "space-between",
-              },
             }}
           />
         </div>
       </div>
-       <UserDetailsModal open={open}  setOpen={setOpen} modalData={modalData}/>
+      <UserDetailsModal open={open} setOpen={setOpen} modalData={modalData} />
     </div>
   );
 };
