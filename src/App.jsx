@@ -19,7 +19,6 @@ import Category from "./Pages/Dashboard/Settings/Category";
 import Booking from "./Pages/Dashboard/Booking";
 import Musician from "./Pages/Dashboard/Musician";
 
-
 function App() {
   return (
     <>
@@ -38,19 +37,19 @@ function App() {
               <Route path="/" element={<DashboardHome />} />
               <Route path="/user-list" element={<UserDetailsList />} />
               <Route path="/musician" element={<Musician />} />
-            
+
               <Route
                 path="/order-transaction-list"
                 element={<OrdersTransaction />}
               />
               <Route path="/notification" element={<Notification />} />
               <Route path="/setting" element={<Category />} />
-              <Route path="/booking" element={<Booking />} />
+              {/* <Route path="/booking" element={<Booking />} /> */}
               <Route path="/make-admin" element={<MakeAdmin />} />
               <Route path="/admin-profile" element={<AdminProfile />} />
 
-               <Route path="/categories" element={<Category />} />
-              <Route path="/disclaimer" element={<Disclaimer />} />          
+              <Route path="/categories" element={<Category />} />
+              <Route path="/disclaimer" element={<Disclaimer />} />
               <Route path="/terms" element={<Terms />} />
             </Route>
 

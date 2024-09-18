@@ -221,10 +221,6 @@ const OrderTransaction = () => {
           >
             <GoArrowUpRight className="text-xl font-bold text-[#2461CB] " />
           </button>
-
-          <button onClick={() => handleDelete(record?._id)}>
-            <RiDeleteBin6Line className="text-xl font-semibold text-red-500" />
-          </button>
         </div>
       ),
     },

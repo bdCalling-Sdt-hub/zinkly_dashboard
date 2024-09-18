@@ -45,11 +45,11 @@ const Dashboard = () => {
       path: "/musician",
       icon: <FaHotTubPerson size={24} />,
     },
-    {
-      title: "Booking",
-      path: "/booking",
-      icon: <BiCalendarCheck size={24} />,
-    },
+    // {
+    //   title: "Booking",
+    //   path: "/booking",
+    //   icon: <BiCalendarCheck size={24} />,
+    // },
     {
       title: "Transaction",
       path: "/order-transaction-list",
@@ -60,6 +60,7 @@ const Dashboard = () => {
       path: "/make-admin",
       icon: <FiUserPlus size={24} />,
     },
+
     {
       title: "Settings",
       path: "/setting",
@@ -82,13 +83,12 @@ const Dashboard = () => {
           title: "Profile",
           path: "/admin-profile",
         },
+        {
+          title: "Log out",
+          path: "/login",
+          icon: <FiLogOut size={24} />,
+        },
       ],
-    },
-
-    {
-      title: "Log out",
-      path: "/login",
-      icon: <FiLogOut size={24} />,
     },
   ];
 
@@ -258,6 +258,32 @@ const Dashboard = () => {
               )}
             </li>
           ))}
+
+          {/* <li
+            onClick={handleLogOut}
+            style={{
+              width: "100%",
+              display: "flex",
+              cursor: "pointer",
+              gap: "15px",
+              color: "#5C5C5C",
+              paddingLeft: "45px",
+            }}
+          >
+            <div style={{ height: "24px" }}>
+              <FiLogOut size={24} />
+            </div>
+            <div
+              style={{
+                fontSize: "14px",
+                textAlign: "center",
+                height: "fit-content",
+                color: "#5C5C5C",
+              }}
+            >
+              Log out
+            </div>
+          </li> */}
         </ul>
       </Sider>
 
