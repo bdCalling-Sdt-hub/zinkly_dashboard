@@ -15,94 +15,7 @@ import {
   Line,
 } from "recharts";
 
-const DailyOverviewChart = () => {
-  const data = [
-    {
-      name: "Jan",
-      uv: 4000,
-      pv: 2400,
-      tv: "12k",
-      amt: 10,
-    },
-    {
-      name: "Feb",
-      uv: 3000,
-      pv: 1398,
-      tv: 1200,
-      amt: 20,
-    },
-    {
-      name: "Mar",
-      uv: 2000,
-      pv: 9800,
-      tv: 1200,
-      amt: 30,
-    },
-    {
-      name: "Apr",
-      uv: 2780,
-      pv: 3908,
-      tv: 1200,
-      amt: 40,
-    },
-    {
-      name: "May",
-      uv: 1890,
-      pv: 4800,
-      tv: 1200,
-      amt: 50,
-    },
-    {
-      name: "Jun",
-      uv: 2390,
-      pv: 3800,
-      tv: 1200,
-      amt: 60,
-    },
-    {
-      name: "Jul",
-      uv: 3490,
-      pv: 4300,
-      tv: 1200,
-      amt: 70,
-    },
-    {
-      name: "Aug",
-      uv: 3490,
-      pv: 4300,
-      tv: 1200,
-      amt: 80,
-    },
-    {
-      name: "Sep",
-      uv: 3490,
-      pv: 4300,
-      tv: 1200,
-      amt: 90,
-    },
-    {
-      name: "Oct",
-      uv: 3490,
-      pv: 4300,
-      tv: 1200,
-      amt: 100,
-    },
-    {
-      name: "Nov",
-      uv: 3490,
-      pv: 4300,
-      tv: 1200,
-      amt: 110,
-    },
-    {
-      name: "Dec",
-      uv: 3490,
-      pv: 4300,
-      tv: 1200,
-      amt: 120,
-    },
-  ];
-
+const DailyOverviewChart = ({ totalUserStats }) => {
   const [year, setYear] = useState(2024);
 
   const items = [
@@ -205,7 +118,7 @@ const DailyOverviewChart = () => {
           </div>
     </div> */}
       <ResponsiveContainer width={"100%"} height={300}>
-        <LineChart data={data} barGap={100}>
+        <LineChart data={totalUserStats} barGap={100}>
           <CartesianGrid horizontal vertical={false} />
           <XAxis
             dataKey="name"
@@ -222,11 +135,19 @@ const DailyOverviewChart = () => {
             fontWeight="400"
             strokeOpacity={0}
           />
+
           <Tooltip />
           <Line
             connectNulls
             type="linear"
-            dataKey="uv"
+            dataKey="user"
+            stroke="#734D2C"
+            fill="#2461CB"
+          />
+          <Line
+            connectNulls
+            type="linear"
+            dataKey="artist"
             stroke="#734D2C"
             fill="#2461CB"
           />

@@ -41,4 +41,8 @@ export const dashboardApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetTransactionQuery } = dashboardApi;
+export const {
+  useGetTotalBookingStatsQuery,
+  useGetTotalEarningStatsQuery,
+  useGetTotalUserStatsQuery,
+} = dashboardApi;
