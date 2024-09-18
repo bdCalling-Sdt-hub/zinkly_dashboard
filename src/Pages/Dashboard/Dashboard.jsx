@@ -20,8 +20,25 @@ const { Header, Sider, Content } = Layout;
 
 const Dashboard = () => {
   const { data: user } = useGetUserProfileQuery({});
-  const [setting, setSetting] = useState(false);
   const { pathname } = useLocation();
+  const [setting, setSetting] = useState(false);
+
+  const settingsRoutes = [
+    "/setting",
+    "/categories",
+    "/disclaimer",
+    "/terms",
+    "/admin-profile",
+  ];
+
+  useEffect(() => {
+    // Check if the current route matches any settings-related routes
+    if (settingsRoutes.includes(pathname)) {
+      setSetting(true);
+    } else {
+      setSetting(false);
+    }
+  }, [pathname]);
   const navigate = useNavigate();
   // console.log(setting);
   const handleLogOut = () => {

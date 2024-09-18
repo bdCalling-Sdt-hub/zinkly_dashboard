@@ -15,35 +15,15 @@ const OrderTransaction = () => {
     new URLSearchParams(window.location.search).get("page") || 1
   );
   const [search, setSearch] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState("");
   const { data: transactionData, isFetching } = useGetTransactionQuery([
     { name: "page", value: page },
     { name: "search", value: search },
+    { name: "status", value: paymentStatus },
   ]);
   const [modalData, setModalData] = useState(null);
   const [open, setOpen] = useState(false);
-
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: id,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "Backend api not found!",
-          icon: "error",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-    });
-  };
-
+  // console.log(transactionData);
   const columns = [
     {
       title: "S.No",
@@ -167,6 +147,8 @@ const OrderTransaction = () => {
               fontWeight: "400",
               display: "flex",
               alignItems: "center",
+              dataIndex: "status",
+              key: "status",
               gap: 4,
             }}
           >
@@ -227,13 +209,15 @@ const OrderTransaction = () => {
   ];
 
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
+    setPaymentStatus(value);
   };
 
   const status = [
-    { value: "all", label: "All" },
-    { value: "completed", label: "Completed" },
+    { value: "", label: "All" },
+    { value: "Accepted", label: "Accepted" },
     { value: "refunded", label: "Refunded" },
+    { value: "Rejected", label: "Rejected" },
+    { value: "Pending", label: "Pending" },
   ];
 
   const handlePageChange = (page) => {
@@ -297,20 +281,11 @@ const OrderTransaction = () => {
               pageSize: 10,
               defaultCurrent: parseInt(page),
               onChange: handlePageChange,
-              total: 85,
+              total: transactionData?.meta?.total,
               showTotal: (total, range) =>
                 `Showing ${range[0]}-${range[1]} out of ${total}`,
               defaultPageSize: 20,
               // defaultCurrent: 1,
-              style: {
-                marginBottom: 20,
-                marginLeft: 20,
-                marginRight: 20,
-                width: "100%",
-                display: "flex",
-                // gap: 10,
-                // justifyContent: "space-between",
-              },
             }}
           />
         </div>
