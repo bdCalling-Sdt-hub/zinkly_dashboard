@@ -6,15 +6,9 @@ import { HiMiniUserGroup } from "react-icons/hi2";
 import { GrMoney } from "react-icons/gr";
 
 import Title from "../../../Shared/Title";
-import {
-  useGetTotalBookingStatsQuery,
-  useGetTotalEarningStatsQuery,
-  useGetTotalUserStatsQuery,
-} from "../../../redux/api/slices/dashboardApi";
+import { useGetTotalBookingStatsQuery } from "../../../redux/api/slices/dashboardApi";
 
 function DashboardHome() {
-  const { data: totalUserStats } = useGetTotalUserStatsQuery({});
-  const { data: totalEarningStats } = useGetTotalEarningStatsQuery({});
   const { data: totalBookingStats } = useGetTotalBookingStatsQuery({});
 
   const {
@@ -137,7 +131,7 @@ function DashboardHome() {
             padding: "10px 20px 20px 20px",
           }}
         >
-          <TotalSellerChart totalEarningStats={totalEarningStats} />
+          <TotalSellerChart />
         </div>
         <div
           style={{
@@ -148,7 +142,7 @@ function DashboardHome() {
             padding: "10px 20px 20px 20px",
           }}
         >
-          <DailyOverviewChart totalUserStats={totalUserStats} />
+          <DailyOverviewChart />
         </div>
       </div>
     </div>

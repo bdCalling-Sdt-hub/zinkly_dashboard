@@ -14,9 +14,13 @@ import {
   LineChart,
   Line,
 } from "recharts";
+import { useGetTotalUserStatsQuery } from "../../../redux/api/slices/dashboardApi";
 
-const DailyOverviewChart = ({ totalUserStats }) => {
+const DailyOverviewChart = () => {
   const [year, setYear] = useState(2024);
+  const { data: totalUserStats } = useGetTotalUserStatsQuery([
+    { name: "year", value: year },
+  ]);
 
   const items = [
     {

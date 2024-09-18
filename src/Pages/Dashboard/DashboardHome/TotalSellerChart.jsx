@@ -12,9 +12,13 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { useGetTotalEarningStatsQuery } from "../../../redux/api/slices/dashboardApi";
 
-const TotalSellerChart = ({ totalEarningStats }) => {
+const TotalSellerChart = () => {
   const [year, setYear] = useState(2024);
+  const { data: totalEarningStats } = useGetTotalEarningStatsQuery([
+    { name: "year", value: year },
+  ]);
 
   const items = [
     {

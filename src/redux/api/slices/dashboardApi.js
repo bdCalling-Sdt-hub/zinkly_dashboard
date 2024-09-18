@@ -15,10 +15,18 @@ export const dashboardApi = baseApi.injectEndpoints({
       providesTags: ["Stats"],
     }),
     getTotalEarningStats: build.query({
-      query: () => {
+      query: (args) => {
+        const params = new URLSearchParams();
+
+        if (args) {
+          args.forEach((item) => {
+            params.append(item.name, item.value);
+          });
+        }
         return {
           url: "/admin/earning-statistic",
           method: "GET",
+          params,
         };
       },
       transformResponse: (response) => {
@@ -27,10 +35,18 @@ export const dashboardApi = baseApi.injectEndpoints({
       providesTags: ["Stats"],
     }),
     getTotalBookingStats: build.query({
-      query: () => {
+      query: (args) => {
+        const params = new URLSearchParams();
+
+        if (args) {
+          args.forEach((item) => {
+            params.append(item.name, item.value);
+          });
+        }
         return {
           url: "/admin/booking-summary",
           method: "GET",
+          params,
         };
       },
       transformResponse: (response) => {

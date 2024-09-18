@@ -219,16 +219,22 @@ const Dashboard = () => {
                             style={{
                               display: "flex",
 
-                              color: "#6A6D7C",
+                              color: "",
+
+                              color:
+                                optionItem.path === pathname
+                                  ? "#fff"
+                                  : "#6A6D7C",
                               alignItems: "flex-end",
                               margin: "auto  0 auto 0",
+
                               gap: "14px",
                               background:
                                 optionItem.path === pathname
-                                  ? "#D0D2CE"
+                                  ? "#ADADAD"
                                   : "white",
                               width: "100%",
-                              padding: "10px 10px",
+                              padding: "10px 50px",
                               borderRadius: "100px 0px 0px 100px",
                             }}
                           >
