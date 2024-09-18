@@ -21,6 +21,8 @@ export const baseApi = createApi({
     "Disclaimer",
     "Terms",
     "Artist",
+    "Transaction",
+    "Stats",
   ],
   endpoints: () => ({}),
 });

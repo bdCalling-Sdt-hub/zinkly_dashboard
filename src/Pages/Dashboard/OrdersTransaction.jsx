@@ -1,186 +1,30 @@
-import React, { useState } from "react";
-import {  IoSearchOutline } from "react-icons/io5";
-import {  Input,  Select,  Table } from "antd";
+import React, { useCallback, useState } from "react";
+import { IoSearchOutline } from "react-icons/io5";
+import { Input, Select, Table } from "antd";
 import Swal from "sweetalert2";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { GoArrowUpRight } from "react-icons/go";
 import Title from "../../Shared/Title";
 import TransactionModal from "../../Components/TransactionModal";
-
-const data = [
-  {
-    key: "1",
-    user: {
-      name: "Mr. Mahmud",
-      img: "https://i.ibb.co/B2xfD8H/images.png",
-    }, 
-    musician_name: "ED Sheeran", 
-    musician_image:"https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__" ,
-    time: "10:00 AM",
-    booking_date: "8/16/13",
-    status: "Completed",
-  },
-  {
-    key: "1",
-    user: {
-      name: "Mr. Mahmud",
-      img: "https://i.ibb.co/B2xfD8H/images.png",
-    },
-    musician_name: "ED Sheeran", 
-    musician_image:"https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__" ,
-    time: "10:00 AM",
-    booking_date: "8/16/13",
-    status: "Refunded",
-  },
-  {
-    key: "1",
-    user: {
-      name: "Mr. Mahmud",
-      img: "https://i.ibb.co/B2xfD8H/images.png",
-    },
-    musician_name: "ED Sheeran", 
-    musician_image:"https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__" ,
-    time: "10:00 AM",
-    booking_date: "8/16/13",
-    status: "Completed",
-  },
-  {
-    key: "1",
-    user: {
-      name: "Mr. Mahmud",
-      img: "https://i.ibb.co/B2xfD8H/images.png",
-    },
-    musician_name: "ED Sheeran", 
-    musician_image:"https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__" ,
-    time: "10:00 AM",
-    booking_date: "8/16/13",
-    status: "Completed",
-  },
-  {
-    key: "1",
-    user: {
-      name: "Mr. Mahmud",
-      img: "https://i.ibb.co/B2xfD8H/images.png",
-    },
-    musician_name: "ED Sheeran", 
-    musician_image:"https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__" ,
-    time: "10:00 AM",
-    booking_date: "8/16/13",
-    status: "Completed",
-  },
-  {
-    key: "1",
-    user: {
-      name: "Mr. Mahmud",
-      img: "https://i.ibb.co/B2xfD8H/images.png",
-    },
-    musician_name: "ED Sheeran", 
-    musician_image:"https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__" ,
-    time: "10:00 AM",
-    booking_date: "8/16/13",
-    status: "Completed",
-  },
-  {
-    key: "1",
-    user: {
-      name: "Mr. Mahmud",
-      img: "https://i.ibb.co/B2xfD8H/images.png",
-    },
-    musician_name: "ED Sheeran", 
-    musician_image:"https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__" ,
-    time: "10:00 AM",
-    booking_date: "8/16/13",
-    status: "Completed",
-  },
-  {
-    key: "1",
-    user: {
-      name: "Mr. Mahmud",
-      img: "https://i.ibb.co/B2xfD8H/images.png",
-    },
-    musician_name: "ED Sheeran", 
-    musician_image:"https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__" ,
-    time: "10:00 AM",
-    booking_date: "8/16/13",
-    status: "Completed",
-  },
-  {
-    key: "1",
-
-    user: {
-      name: "Mr. Mahmud",
-      img: "https://i.ibb.co/B2xfD8H/images.png",
-    },
-    musician_name: "ED Sheeran", 
-    musician_image:"https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__" ,
-    time: "10:00 AM",
-    booking_date: "8/16/13",
-    status: "Completed",
-  },
-  {
-    key: "1",
-
-    user: {
-      name: "Mr. Mahmud",
-      img: "https://i.ibb.co/B2xfD8H/images.png",
-    },
-    musician_name: "ED Sheeran", 
-    musician_image:"https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__" ,
-    time: "10:00 AM",
-    booking_date: "8/16/13",
-    status: "Completed",
-  },
-  {
-    key: "1",
-    user: {
-      name: "Mr. Mahmud",
-      img: "https://i.ibb.co/B2xfD8H/images.png",
-    },
-    musician_name: "ED Sheeran", 
-    musician_image:"https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__" ,
-    time: "10:00 AM",
-    booking_date: "8/16/13",
-    status: "Completed",
-  },
-  {
-    key: "1",
-
-    user: {
-      name: "Mr. Mahmud",
-      img: "https://i.ibb.co/B2xfD8H/images.png",
-    },
-    musician_name: "ED Sheeran", 
-    musician_image:"https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__" ,
-    time: "10:00 AM",
-    booking_date: "8/16/13",
-    status: "Completed",
-  },
-  {
-    key: "1",
-
-    user: {
-      name: "Mr. Mahmud",
-      img: "https://i.ibb.co/B2xfD8H/images.png",
-    },
-    musician_name: "ED Sheeran", 
-    musician_image:"https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__" ,
-    time: "10:00 AM",
-    booking_date: "8/16/13",
-    status: "Completed",
-  },
-  
-];
+import { useGetTransactionQuery } from "../../redux/api/slices/transactionApi";
+import { imageUrl } from "../../redux/api/baseApi";
+import _ from "lodash";
 
 const OrderTransaction = () => {
   const [page, setPage] = useState(
     new URLSearchParams(window.location.search).get("page") || 1
   );
-  const [open, setOpen] = useState(false)
-
+  const [search, setSearch] = useState("");
+  const { data: transactionData, isFetching } = useGetTransactionQuery([
+    { name: "page", value: page },
+    { name: "search", value: search },
+  ]);
+  const [modalData, setModalData] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Are you sure?",
+      title: id,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -191,8 +35,8 @@ const OrderTransaction = () => {
       if (result.isConfirmed) {
         Swal.fire({
           title: "Deleted!",
-          text: "Your file has been deleted.",
-          icon: "success",
+          text: "Backend api not found!",
+          icon: "error",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -200,18 +44,20 @@ const OrderTransaction = () => {
     });
   };
 
-
   const columns = [
     {
       title: "S.No",
-      dataIndex: "key",
-      key: "key",
+      dataIndex: "_id",
+      key: "_id",
+      render: (_, record, index) => {
+        return <p>{index + 1}</p>;
+      },
     },
     {
-      title: "User",
+      title: "User Name",
       dataIndex: "user",
       key: "user",
-      render: (user) => {
+      render: (_, record) => {
         return (
           <div
             style={{
@@ -222,24 +68,58 @@ const OrderTransaction = () => {
           >
             <img
               style={{
-                height: 36,
-                width: 40,
-                borderRadius: "100%",
+                height: 48,
+                width: 48,
+                borderRadius: 8,
                 backgroundSize: "cover",
               }}
-              src={user?.img}
+              src={`${imageUrl}/${record?.user?.profile}`}
               alt="ok"
             />
             <p
               style={{
                 letterSpacing: 0.4,
-
-                color: "#666666",
-
+                fontSize: "#666666",
                 fontWeight: "400",
               }}
             >
-              {user?.name}
+              {record?.user?.name}
+            </p>
+          </div>
+        );
+      },
+    },
+    {
+      title: "User Name",
+      dataIndex: "artist",
+      key: "artist",
+      render: (_, record) => {
+        return (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+            }}
+          >
+            <img
+              style={{
+                height: 48,
+                width: 48,
+                borderRadius: 8,
+                backgroundSize: "cover",
+              }}
+              src={`${imageUrl}/${record?.artist?.profile}`}
+              alt="ok"
+            />
+            <p
+              style={{
+                letterSpacing: 0.4,
+                fontSize: "#666666",
+                fontWeight: "400",
+              }}
+            >
+              {record?.artist?.name}
             </p>
           </div>
         );
@@ -247,88 +127,74 @@ const OrderTransaction = () => {
     },
 
     {
-      title: "Musician Name",
-      dataIndex: "musician_name",
-      key: "musician_name", 
-      render:(_, record)=>(
-        <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-        }}
-      >
-        <img
-          style={{
-            height: 36,
-            width: 40,
-            borderRadius: "100%",
-            backgroundSize: "cover",
-          }}
-          src={record?.musician_image}
-          alt="ok"
-        />
-        <p
-          style={{
-            letterSpacing: 0.4,
-
-            color: "#666666",
-
-            fontWeight: "400",
-          }}
-        >
-          {record?.musician_name}
-        </p>
-      </div>
-      )
-    },
-    {
-      title: " Date",
+      title: " Booking Date",
       dataIndex: "booking_date",
       key: "booking_date",
-    }, 
+    },
     {
-      title: "Time",
-      dataIndex: "time",
-      key: "time",
+      title: "Booking Time",
+      dataIndex: "booking_time",
+      key: "booking_time",
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (_, record) => (
-        <p
-          style={{
-            letterSpacing: 0.4,
-            fontSize: "#666666",
-            fontWeight: "400",
-            display: "flex",
-            alignItems: "center",
-            gap: 4,
-          }}
-        >
-          <span
-            style={{
-              height: 20,
-              width: 20,
-              borderRadius: 50,
-              background:
-                record?.status === "Completed" ? "#00B047" : "#F27405",
-              color: "white",
-              display: "flex",
-            }}
-          ></span>
+      render: (status) => {
+        // Define colors for different statuses
+        const getStatusStyles = (status) => {
+          switch (status.toLowerCase()) {
+            case "accepted":
+              return { color: "#00B047", background: "#00B047" };
+            case "complete":
+              return { color: "#007BFF", background: "#007BFF" };
+            case "rejected":
+              return { color: "#F27405", background: "#F27405" };
+            case "pending":
+              return { color: "#FFC107", background: "#FFC107" };
+            default:
+              return { color: "#666666", background: "#666666" }; // Default style
+          }
+        };
 
-          <span
+        const { color, background } = getStatusStyles(status);
+
+        return (
+          <p
             style={{
-              color: record?.status === "Completed" ? "#00B047" : "#F27405",
+              letterSpacing: 0.4,
+              fontSize: 14, // Adjusted to proper value
+              fontWeight: "400",
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
             }}
           >
-            {record?.status}
-          </span>
-        </p>
-      ),
+            <span
+              style={{
+                height: 20,
+                width: 20,
+                borderRadius: 50,
+                background: background,
+                color: "white",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            ></span>
+
+            <span
+              style={{
+                color: color,
+              }}
+            >
+              {status}
+            </span>
+          </p>
+        );
+      },
     },
+
     {
       title: "Action",
       dataIndex: "action",
@@ -336,13 +202,16 @@ const OrderTransaction = () => {
       render: (_, record) => (
         <div
           style={{
-            display: "flex", 
+            display: "flex",
             alignItems: "center",
             gap: 8,
           }}
         >
           <button
-            onClick={() => setOpen(true)}
+            onClick={() => {
+              setOpen(true);
+              setModalData(record);
+            }}
             style={{
               cursor: "pointer",
               border: "none",
@@ -350,28 +219,26 @@ const OrderTransaction = () => {
               background: "white",
             }}
           >
-        <GoArrowUpRight className="text-xl font-bold text-[#2461CB] " />
-          </button> 
+            <GoArrowUpRight className="text-xl font-bold text-[#2461CB] " />
+          </button>
 
-          <button onClick={()=>handleDelete(record?.key)}>
-          <RiDeleteBin6Line  className="text-xl font-semibold text-red-500" />
-          </button> 
-
+          <button onClick={() => handleDelete(record?._id)}>
+            <RiDeleteBin6Line className="text-xl font-semibold text-red-500" />
+          </button>
         </div>
       ),
     },
-  ]; 
+  ];
 
   const handleChange = (value) => {
     console.log(`selected ${value}`);
-  };  
+  };
 
-  const status=[
-    { value: 'all', label: 'All' },
-    { value: 'completed', label: 'Completed' },
-    { value: 'refunded', label: 'Refunded' },
-  ]
-
+  const status = [
+    { value: "all", label: "All" },
+    { value: "completed", label: "Completed" },
+    { value: "refunded", label: "Refunded" },
+  ];
 
   const handlePageChange = (page) => {
     setPage(page);
@@ -380,8 +247,18 @@ const OrderTransaction = () => {
     window.history.pushState(null, "", `?${params.toString()}`);
   };
 
+  //debounce for search
+  const debouncedSearch = useCallback(
+    _.debounce((searchText) => {
+      setSearch(searchText);
+    }, 500),
+    []
+  );
 
-
+  // Handle search input change
+  const handleSearch = (e) => {
+    debouncedSearch(e.target.value);
+  };
   return (
     <div>
       <div
@@ -398,25 +275,28 @@ const OrderTransaction = () => {
           }}
         >
           <div>
-            <Title className="">
-            Transaction Details
-            </Title>
+            <Title className="">Transaction Details</Title>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Input  placeholder="Search Something...." prefix={<IoSearchOutline className="text-2xl text-gray-400" />} style={{ width:"400px" , height:"40px"}} />
-          <Select
-      defaultValue="Status"
-      style={{ width: 120 , height:"40px" }}
-      onChange={handleChange}
-      options={status}
-    />
-         
+            <Input
+              onChange={handleSearch}
+              placeholder="Search Something...."
+              prefix={<IoSearchOutline className="text-2xl text-gray-400" />}
+              style={{ width: "400px", height: "40px" }}
+            />
+            <Select
+              defaultValue="Status"
+              style={{ width: 120, height: "40px" }}
+              onChange={handleChange}
+              options={status}
+            />
           </div>
         </div>
         <div>
           <Table
+            loading={isFetching}
             columns={columns}
-            dataSource={data}
+            dataSource={transactionData?.data}
             pagination={{
               pageSize: 10,
               defaultCurrent: parseInt(page),
@@ -439,7 +319,7 @@ const OrderTransaction = () => {
           />
         </div>
       </div>
-   <TransactionModal open={open} setOpen={setOpen} />
+      <TransactionModal modalData={modalData} open={open} setOpen={setOpen} />
     </div>
   );
 };
