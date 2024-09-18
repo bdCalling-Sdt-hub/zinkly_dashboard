@@ -1,14 +1,13 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { getToken, getUser } from "../lib/tokenManagement";
 
 const PrivateRoute = ({ children }) => {
   const location = useLocation();
 
-  const user = {
-    email: "tushar@gmail.com",
-  };
+  const user = getUser();
 
-  if (user.email) {
+  if (user?.role === "ADMIN" || "SUPER_ADMIN") {
     return children;
   }
 
