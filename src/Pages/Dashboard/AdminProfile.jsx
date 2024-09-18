@@ -17,6 +17,8 @@ const AdminProfile = () => {
   const [isEdit, setIsEdit] = useState(true);
   const [form] = Form.useForm();
 
+  // console.log(user);
+
   //for default profile data
   useEffect(() => {
     if (user) {

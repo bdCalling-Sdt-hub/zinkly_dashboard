@@ -15,7 +15,7 @@ const SalonCategoryList = () => {
   const [addAdmin] = useAddAdminMutation();
   const [deleteAdmin] = useDeleteAdminMutation();
   const { data: admins, isFetching } = useGetAdminQuery({});
-  console.log(admins);
+  // console.log(admins);
   const [openAddModel, setOpenAddModel] = useState(false);
 
   const [page, setPage] = useState(
@@ -171,29 +171,30 @@ const SalonCategoryList = () => {
         </div>
         <div>
           <Table
+            pagination={false}
             loading={isFetching}
             columns={columns}
             style={{}}
             dataSource={admins}
-            pagination={{
-              pageSize: 10,
-              defaultCurrent: parseInt(page),
-              onChange: handlePageChange,
-              total: 85,
-              showTotal: (total, range) =>
-                `Showing ${range[0]}-${range[1]} out of ${total}`,
-              defaultPageSize: 20,
-              //   defaultCurrent: 1,
-              style: {
-                marginBottom: 20,
-                marginLeft: 20,
-                marginRight: 20,
-                width: "100%",
-                display: "flex",
-                // gap: 10,
-                // justifyContent: "space-between",
-              },
-            }}
+            // pagination={{
+            //   pageSize: 10,
+            //   defaultCurrent: parseInt(page),
+            //   onChange: handlePageChange,
+            //   total: 85,
+            //   showTotal: (total, range) =>
+            //     `Showing ${range[0]}-${range[1]} out of ${total}`,
+            //   defaultPageSize: 20,
+            //   //   defaultCurrent: 1,
+            //   style: {
+            //     marginBottom: 20,
+            //     marginLeft: 20,
+            //     marginRight: 20,
+            //     width: "100%",
+            //     display: "flex",
+            //     // gap: 10,
+            //     // justifyContent: "space-between",
+            //   },
+            // }}
           />
         </div>
       </div>
