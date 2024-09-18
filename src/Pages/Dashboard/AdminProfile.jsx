@@ -1,40 +1,118 @@
-import React, { useState } from "react";
-import { Button, Form, Input, Slider, Table } from "antd";
-import Swal from "sweetalert2";
+import React, { useEffect, useState } from "react";
+import { Button, Form, Input, notification, Slider, Table } from "antd";
 import { CiEdit } from "react-icons/ci";
-
+import {
+  useGetUserProfileQuery,
+  useUpdateUserProfileImageMutation,
+  useUpdateUserProfileMutation,
+} from "../../redux/api/slices/userApi";
+import { useChangePasswordMutation } from "../../redux/api/slices/authApi";
+import { imageUrl } from "../../redux/api/baseApi";
 
 const AdminProfile = () => {
-  const [isEdit, setIsEdit] = useState(false);
+  const { data: user } = useGetUserProfileQuery({});
+  const [updateUserProfile] = useUpdateUserProfileMutation();
+  const [changePassword] = useChangePasswordMutation();
+  const [updateUserProfileImage] = useUpdateUserProfileImageMutation();
+  const [isEdit, setIsEdit] = useState(true);
+  const [form] = Form.useForm();
 
-  const [newPassError, setNewPassError] = useState("");
-  const [conPassError, setConPassError] = useState("");
-  const [curPassError, setCurPassError] = useState("");
+  //for default profile data
+  useEffect(() => {
+    if (user) {
+      form.setFieldsValue({
+        name: user.name,
+        email: user.email,
+        contact: user.contact,
+        location: user.location,
+      });
+    }
+  }, [user]);
+  //change profile image function
+  const onImageChange = async (event) => {
+    const image = event.target.files[0];
 
-  const [imgPick, setImagePick] = useState(null);
+    if (image) {
+      const formData = new FormData();
+      formData.append("image", image);
 
-  const onImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      setImagePick(URL.createObjectURL(event.target.files[0]));
+      try {
+        try {
+          const res = await updateUserProfileImage(formData).unwrap();
+          // console.log(res);
+          if (res.success) {
+            notification.success({
+              message: res.message,
+              duration: 2,
+            });
+          }
+        } catch (error) {
+          notification.error({
+            message:
+              (error.data && error.data.message) ||
+              "Something went wrong while updating profile image!!!",
+            duration: 2,
+          });
+        }
+      } catch (error) {}
     }
   };
 
-  const handleChangePassword = (values) => {
-    console.log(values);
-    if (values?.current_password === values.new_password) {
-      setNewPassError("The New password is semilar with old Password");
-    } else {
-      setNewPassError("");
+  //for changing user password
+  const handleChangePassword = async (values) => {
+    if (values.newPassword !== values.confirmPassword) {
+      return notification.error({
+        message: "Confirm password did'nt match!!!",
+        duration: 2,
+      });
     }
 
-    if (values?.new_password !== values.confirm_password) {
-      setConPassError("New Password and Confirm Password Doesn't Matched");
-    } else {
-      setConPassError("");
+    try {
+      const res = await changePassword(values).unwrap();
+      // console.log(res);
+      if (res.success) {
+        notification.success({
+          message: res.message,
+          duration: 2,
+        });
+      }
+    } catch (error) {
+      notification.error({
+        message:
+          (error.data && error.data.message) ||
+          "Something went wrong while changing password!!!",
+        duration: 2,
+      });
     }
   };
 
+  //for updaing use profile
+  const handleUpdateProfile = async (values) => {
+    const formData = new FormData();
+    for (const key in values) {
+      if (values.hasOwnProperty(key)) {
+        formData.append(key, values[key]);
+      }
+    }
 
+    try {
+      const res = await updateUserProfile(formData).unwrap();
+      // console.log(res);
+      if (res.success) {
+        notification.success({
+          message: res.message,
+          duration: 2,
+        });
+      }
+    } catch (error) {
+      notification.error({
+        message:
+          (error.data && error.data.message) ||
+          "Something went wrong while updating profile!!!",
+        duration: 2,
+      });
+    }
+  };
   return (
     <div className="mt-5">
       <div
@@ -72,11 +150,7 @@ const AdminProfile = () => {
               }}
             >
               <img
-                src={
-                  imgPick
-                    ? imgPick
-                    : "https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__"
-                }
+                src={`${imageUrl}/${user?.profile}`}
                 alt=""
                 style={{
                   height: 114,
@@ -112,7 +186,7 @@ const AdminProfile = () => {
                 color: "#333333",
               }}
             >
-             Mithila 
+              {user ? user.name : "Anonymous"}
             </p>
           </div>
           <input
@@ -178,125 +252,127 @@ const AdminProfile = () => {
               >
                 Edit Your Profile
               </p>
-              <div
-                style={{
-                  marginTop: 25,
-                  display: "grid",
-                  gridTemplateColumns: "auto auto",
-                  gap: 25,
-                }}
+              <Form
+                form={form}
+                layout="vertical"
+                onFinish={handleUpdateProfile} // Handle form submit
+                initialValues={user}
               >
-                <div>
-                  <label
-                    style={{
-                      margin: "0px 10px",
-                      color: "#636363",
-                      fontSize: 14,
-                      fontWeight: 500,
-                    }}
-                  >
-                    User Name
-                  </label>
-                  <Input
-                    placeholder="Admin Marie"
-                    style={{
-                      padding: "10px",
-                      color: "#818181",
-                      fontSize: 14,
-                      fontWeight: 400,
-                      margin: "8px 0px",
-                    }}
-                  />
-                </div>
-                <div>
-                  <label
-                    style={{
-                      margin: "0px 10px",
-                      color: "#636363",
-                      fontSize: 14,
-                      fontWeight: 500,
-                    }}
-                  >
-                    Email
-                  </label>
-                  <Input
-                    placeholder="Camille@gmail.com"
-                    style={{
-                      padding: "10px",
-                      color: "#818181",
-                      fontSize: 14,
-                      fontWeight: 400,
-                      margin: "8px 0px",
-                    }}
-                  />
-                </div>
-                <div>
-                  <label
-                    style={{
-                      margin: "0px 10px",
-                      color: "#636363",
-                      fontSize: 14,
-                      fontWeight: 500,
-                    }}
-                  >
-                    Contact no
-                  </label>
-                  <Input
-                    placeholder="+99007007007"
-                    style={{
-                      padding: "10px",
-                      color: "#818181",
-                      fontSize: 14,
-                      fontWeight: 400,
-                      margin: "8px 0px",
-                    }}
-                  />
-                </div>
-                <div>
-                  <label
-                    style={{
-                      margin: "0px 10px",
-                      color: "#636363",
-                      fontSize: 14,
-                      fontWeight: 500,
-                    }}
-                  >
-                    Address
-                  </label>
-                  <Input
-                    placeholder="79/A Joker Vila, Gotham City"
-                    style={{
-                      padding: "10px",
-                      color: "#818181",
-                      fontSize: 14,
-                      fontWeight: 400,
-                      margin: "8px 0px",
-                    }}
-                  />
-                </div>
-              </div>
-              <div
-                style={{
-                  marginTop: 24,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Button
+                <div
                   style={{
-                    height: 44,
-                    width: 150,
-                    backgroundColor: "#2461CB",
-                    color: "white",
-                    borderRadius: "8px",
-                    fontWeight: 500,
-                    fontSize: 14,
+                    marginTop: 25,
+                    display: "grid",
+                    gridTemplateColumns: "auto auto",
+                    gap: 25,
                   }}
                 >
-                  Save Changes
-                </Button>
-              </div>
+                  <Form.Item
+                    label="User Name"
+                    name="name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your user name!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder="Admin Marie"
+                      style={{
+                        padding: "10px",
+                        color: "#818181",
+                        fontSize: 14,
+                        fontWeight: 400,
+                        margin: "8px 0px",
+                      }}
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Email"
+                    name="email"
+                    rules={[
+                      { required: true, message: "Please input your email!" },
+                    ]}
+                  >
+                    <Input
+                      placeholder="Camille@gmail.com"
+                      style={{
+                        padding: "10px",
+                        color: "#818181",
+                        fontSize: 14,
+                        fontWeight: 400,
+                        margin: "8px 0px",
+                      }}
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Contact No"
+                    name="contact"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your contact no!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder="+99007007007"
+                      style={{
+                        padding: "10px",
+                        color: "#818181",
+                        fontSize: 14,
+                        fontWeight: 400,
+                        margin: "8px 0px",
+                      }}
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Address"
+                    name="location"
+                    rules={[
+                      { required: true, message: "Please input your address!" },
+                    ]}
+                  >
+                    <Input
+                      placeholder="79/A Joker Vila, Gotham City"
+                      style={{
+                        padding: "10px",
+                        color: "#818181",
+                        fontSize: 14,
+                        fontWeight: 400,
+                        margin: "8px 0px",
+                      }}
+                    />
+                  </Form.Item>
+                </div>
+
+                <div
+                  style={{
+                    marginTop: 24,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{
+                      height: 44,
+                      width: 150,
+                      borderRadius: "8px",
+                      fontWeight: 500,
+                      fontSize: 14,
+                      backgroundColor: "#2461CB",
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                </div>
+              </Form>
             </div>
           ) : (
             <div
@@ -328,7 +404,7 @@ const AdminProfile = () => {
                   </label>
                   <Form.Item
                     style={{ marginBottom: 0 }}
-                    name="current_password"
+                    name="currentPassword"
                     rules={[
                       {
                         required: true,
@@ -349,14 +425,6 @@ const AdminProfile = () => {
                       }}
                     />
                   </Form.Item>
-                  {curPassError && (
-                    <label
-                      style={{ display: "block", color: "red" }}
-                      htmlFor="error"
-                    >
-                      {curPassError}
-                    </label>
-                  )}
                 </div>
 
                 <div style={{ marginBottom: "20px" }}>
@@ -372,7 +440,7 @@ const AdminProfile = () => {
                     New Password
                   </label>
                   <Form.Item
-                    name="new_password"
+                    name="newPassword"
                     rules={[
                       {
                         required: true,
@@ -394,14 +462,6 @@ const AdminProfile = () => {
                       }}
                     />
                   </Form.Item>
-                  {newPassError && (
-                    <label
-                      style={{ display: "block", color: "red" }}
-                      htmlFor="error"
-                    >
-                      {newPassError}
-                    </label>
-                  )}
                 </div>
 
                 <div style={{ marginBottom: "40px" }}>
@@ -418,7 +478,7 @@ const AdminProfile = () => {
                   </label>
                   <Form.Item
                     style={{ marginBottom: 0 }}
-                    name="confirm_password"
+                    name="confirmPassword"
                     rules={[
                       {
                         required: true,
@@ -439,14 +499,6 @@ const AdminProfile = () => {
                       }}
                     />
                   </Form.Item>
-                  {conPassError && (
-                    <label
-                      style={{ display: "block", color: "red" }}
-                      htmlFor="error"
-                    >
-                      {conPassError}
-                    </label>
-                  )}
                 </div>
 
                 <div
@@ -467,6 +519,7 @@ const AdminProfile = () => {
                       }}
                     >
                       <Button
+                        htmlType="submit"
                         style={{
                           height: 44,
                           width: 150,
