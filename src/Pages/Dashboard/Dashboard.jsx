@@ -16,6 +16,8 @@ import { RiNotification2Line } from "react-icons/ri";
 import { calc } from "antd/es/theme/internal";
 import { useGetUserProfileQuery } from "../../redux/api/slices/userApi";
 import { imageUrl } from "../../redux/api/baseApi";
+import { removeToken } from "../../lib/tokenManagement";
+import Swal from "sweetalert2";
 const { Header, Sider, Content } = Layout;
 
 const Dashboard = () => {
@@ -42,8 +44,31 @@ const Dashboard = () => {
   const navigate = useNavigate();
   // console.log(setting);
   const handleLogOut = () => {
-    navigate("/login");
-    window.location.reload();
+    Swal.fire({
+      title: "Confirm Logout",
+      text: "Are you sure you want to log out?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Log Out",
+      cancelButtonText: "Cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        removeToken();
+        Swal.fire({
+          title: "Logged Out Successfully",
+          text: "You have been logged out. Redirecting to the login page...",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
+        // Redirect to login page
+        navigate("/login");
+        window.location.reload();
+      }
+    });
   };
 
   const linkItems = [
@@ -99,11 +124,6 @@ const Dashboard = () => {
         {
           title: "Profile",
           path: "/admin-profile",
-        },
-        {
-          title: "Log out",
-          path: "/login",
-          icon: <FiLogOut size={24} />,
         },
       ],
     },
@@ -219,8 +239,6 @@ const Dashboard = () => {
                             style={{
                               display: "flex",
 
-                              color: "",
-
                               color:
                                 optionItem.path === pathname
                                   ? "#fff"
@@ -281,32 +299,44 @@ const Dashboard = () => {
               )}
             </li>
           ))}
-
-          {/* <li
+          {/* Log out as a button */}
+          <li
             onClick={handleLogOut}
             style={{
               width: "100%",
-              display: "flex",
-              cursor: "pointer",
-              gap: "15px",
-              color: "#5C5C5C",
-              paddingLeft: "45px",
+              position: "relative",
+              paddingLeft: "40px",
             }}
           >
-            <div style={{ height: "24px" }}>
-              <FiLogOut size={24} />
-            </div>
-            <div
+            <button
+              // Replace with your logout handler
               style={{
-                fontSize: "14px",
-                textAlign: "center",
-                height: "fit-content",
-                color: "#5C5C5C",
+                display: "flex",
+                alignItems: "flex-end",
+                gap: "14px",
+                background: "white",
+                width: "100%",
+                padding: "10px 10px",
+                borderRadius: "100px 0px 0px 100px",
+                border: "none",
+                cursor: "pointer",
+                color: "#6A6D7C",
               }}
             >
-              Log out
-            </div>
-          </li> */}
+              <div style={{ height: "24px" }}>
+                <FiLogOut size={24} />
+              </div>
+              <div
+                style={{
+                  fontSize: "14px",
+                  textAlign: "center",
+                  height: "fit-content",
+                }}
+              >
+                Log out
+              </div>
+            </button>
+          </li>{" "}
         </ul>
       </Sider>
 

@@ -24,27 +24,27 @@ const UserDetailsList = () => {
   const [open, setOpen] = useState(false);
   const [modalData, SetModalData] = useState(null);
 
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: id,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "Backend api not provided!",
-          icon: "error",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-    });
-  };
+  // const handleDelete = (id) => {
+  //   Swal.fire({
+  //     title: id,
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Yes",
+  //     cancelButtonText: "No",
+  //   }).then(async (result) => {
+  //     if (result.isConfirmed) {
+  //       Swal.fire({
+  //         title: "Deleted!",
+  //         text: "Backend api not provided!",
+  //         icon: "error",
+  //         showConfirmButton: false,
+  //         timer: 1500,
+  //       });
+  //     }
+  //   });
+  // };
 
   const columns = [
     {
@@ -109,8 +109,9 @@ const UserDetailsList = () => {
       title: "Action",
       dataIndex: "action",
       key: "action",
+      align: "center",
       render: (_, record) => (
-        <div className=" flex items-center gap-2 ">
+        <div className=" flex items-center justify-center gap-2 ">
           <button
             onClick={() => {
               setOpen(true), SetModalData(record);
@@ -124,9 +125,9 @@ const UserDetailsList = () => {
             <GoArrowUpRight className="text-xl font-semibold text-[#2461CB]" />
           </button>
 
-          <button onClick={() => handleDelete(record?._id)}>
+          {/* <button onClick={() => handleDelete(record?._id)}>
             <RiDeleteBin6Line className="text-xl font-semibold text-red-500" />
-          </button>
+          </button> */}
         </div>
       ),
     },

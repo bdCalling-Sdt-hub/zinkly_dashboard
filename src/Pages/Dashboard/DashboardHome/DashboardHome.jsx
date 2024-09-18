@@ -9,7 +9,7 @@ import Title from "../../../Shared/Title";
 import { useGetTotalBookingStatsQuery } from "../../../redux/api/slices/dashboardApi";
 
 function DashboardHome() {
-  const { data: totalBookingStats } = useGetTotalBookingStatsQuery({});
+  const { data: totalBookingStats } = useGetTotalBookingStatsQuery([]);
 
   const {
     totalUser = 0,
