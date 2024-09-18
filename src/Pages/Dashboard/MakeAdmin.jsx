@@ -1,184 +1,83 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
-import {
-  Button,
-  Table,
-} from "antd";
+import { Button, notification, Table } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
 import Title from "../../Shared/Title";
 import MakeAdminModal from "../../Components/MakeAdminModal";
-
-const data = [
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-  {
-    key: "1",
-
-    email: "asad@gmail.com",
-    admin_name: "Asad",
-   
-  },
-];
+import {
+  useAddAdminMutation,
+  useDeleteAdminMutation,
+  useGetAdminQuery,
+} from "../../redux/api/slices/adminApi";
 
 const SalonCategoryList = () => {
+  const [addAdmin] = useAddAdminMutation();
+  const [deleteAdmin] = useDeleteAdminMutation();
+  const { data: admins, isFetching } = useGetAdminQuery({});
+  console.log(admins);
   const [openAddModel, setOpenAddModel] = useState(false);
 
   const [page, setPage] = useState(
     new URLSearchParams(window.location.search).get("page") || 1
   );
 
-
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Are you sure?",
+      title: "Are you sure you?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes",
       cancelButtonText: "No",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your file has been deleted.",
-          icon: "success",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        const res = await deleteAdmin(id).unwrap();
+        if (res.success) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your file has been deleted.",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
       }
     });
   };
 
-
   const columns = [
     {
       title: "S.No",
-      dataIndex: "key",
-      key: "key",
+      dataIndex: "_id",
+      key: "_id",
       width: 150,
+      render: (_, record, index) => {
+        return <p>{index + 1}</p>;
+      },
     },
     {
       title: "Admin Name",
-      dataIndex: "admin_name",
-      key: "admin_name",
+      dataIndex: "name",
+      key: "name",
     },
 
     {
       title: "Admin Email",
       dataIndex: "email",
       key: "email",
+      render: (email) => {
+        return <p>{email ? email : "----------"}</p>;
+      },
+    },
+    {
+      title: "Contact No",
+      dataIndex: "contact",
+      key: "contact",
+      render: (contact) => {
+        return <p>{contact ? contact : "----------"}</p>;
+      },
     },
     {
       title: "Action",
@@ -186,18 +85,19 @@ const SalonCategoryList = () => {
       key: "action",
       width: 150,
       textAlign: "center",
-      render: (_, record) => (   
-          <button onClick={()=>handleDelete(record?.id)}
-            style={{
-              cursor: "pointer",
-              border: "none",
-              outline: "none",
-              background: "white",
-              color: "#808080",
-            }}
-          >
-            <FaRegTrashAlt size={20} />
-          </button>
+      render: (_, record) => (
+        <button
+          onClick={() => handleDelete(record?._id)}
+          style={{
+            cursor: "pointer",
+            border: "none",
+            outline: "none",
+            background: "white",
+            color: "#808080",
+          }}
+        >
+          <FaRegTrashAlt size={20} />
+        </button>
       ),
     },
   ];
@@ -209,6 +109,31 @@ const SalonCategoryList = () => {
     window.history.pushState(null, "", `?${params.toString()}`);
   };
 
+  // add new admin
+  const handleMakeAdmin = async (values) => {
+    const makeAdminData = {
+      ...values,
+      role: "ADMIN",
+    };
+
+    try {
+      const res = await addAdmin(makeAdminData).unwrap();
+      if (res.success) {
+        notification.success({
+          message: res.message,
+          duration: 2,
+        });
+        setOpenAddModel(false);
+      }
+    } catch (error) {
+      notification.error({
+        message:
+          (error.data && error.data.message) ||
+          "Something went wrong while adding disclaimer!!!",
+        duration: 2,
+      });
+    }
+  };
   return (
     <div>
       <div
@@ -225,10 +150,7 @@ const SalonCategoryList = () => {
           }}
         >
           <div>
-            <Title
-            >
-              Make Admin
-            </Title>
+            <Title>Make Admin</Title>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <Button
@@ -249,9 +171,10 @@ const SalonCategoryList = () => {
         </div>
         <div>
           <Table
+            loading={isFetching}
             columns={columns}
             style={{}}
-            dataSource={data}
+            dataSource={admins}
             pagination={{
               pageSize: 10,
               defaultCurrent: parseInt(page),
@@ -274,7 +197,11 @@ const SalonCategoryList = () => {
           />
         </div>
       </div>
-     <MakeAdminModal openAddModel={openAddModel} setOpenAddModel={setOpenAddModel} />
+      <MakeAdminModal
+        handleMakeAdmin={handleMakeAdmin}
+        openAddModel={openAddModel}
+        setOpenAddModel={setOpenAddModel}
+      />
     </div>
   );
 };

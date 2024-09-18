@@ -1,10 +1,10 @@
-import { Button, Form, Input, Modal, Select } from 'antd';
-import React from 'react';
-const { Option } = Select;
-const MakeAdminModal = ({openAddModel , setOpenAddModel}) => {
-    return (
-        <div>
-             <Modal
+import { Button, Form, Input, Modal, Select } from "antd";
+import React from "react";
+const MakeAdminModal = ({ openAddModel, setOpenAddModel, handleMakeAdmin }) => {
+  const [form] = Form.useForm();
+  return (
+    <div>
+      <Modal
         centered
         open={openAddModel}
         onCancel={() => {
@@ -21,15 +21,15 @@ const MakeAdminModal = ({openAddModel , setOpenAddModel}) => {
           >
             {`Add Admin`}
           </h1>
-          <Form>
+          <Form form={form} onFinish={handleMakeAdmin}>
             <div>
               <p className="text-[#6D6D6D] py-1">Name</p>
               <Form.Item
-                name="title"
+                name="name"
                 rules={[
                   {
                     required: true,
-                    message: "Please input Package Name",
+                    message: "Please input a name",
                   },
                 ]}
               >
@@ -38,8 +38,8 @@ const MakeAdminModal = ({openAddModel , setOpenAddModel}) => {
                   type="text"
                 />
               </Form.Item>
-            </div> 
-            
+            </div>
+
             <div>
               <p className="text-[#6D6D6D] py-1">Email </p>
               <Form.Item
@@ -47,7 +47,7 @@ const MakeAdminModal = ({openAddModel , setOpenAddModel}) => {
                 rules={[
                   {
                     required: true,
-                    message: "Please input Package Name",
+                    message: "Please input a email",
                   },
                 ]}
               >
@@ -56,9 +56,8 @@ const MakeAdminModal = ({openAddModel , setOpenAddModel}) => {
                   type="text"
                 />
               </Form.Item>
-            </div> 
+            </div>
 
-            
             <div>
               <p className="text-[#6D6D6D] py-1">Password </p>
               <Form.Item
@@ -66,7 +65,7 @@ const MakeAdminModal = ({openAddModel , setOpenAddModel}) => {
                 rules={[
                   {
                     required: true,
-                    message: "Please input Password",
+                    message: "Please input a Password",
                   },
                 ]}
               >
@@ -75,33 +74,27 @@ const MakeAdminModal = ({openAddModel , setOpenAddModel}) => {
                   type="text"
                 />
               </Form.Item>
-            </div> 
-
-
-            <div style={{ width: "100%" }}>
-              <p className="text-[#6D6D6D] py-1">type </p>
-              <Select
-                placeholder="Select admin type"
-                style={{
-                  width: "100%",
-                  height: 40,
-                }}
-              >
-                <Option value="super-admin">Super Admin</Option>
-                <Option value="admin">Admin</Option>
-              </Select>
             </div>
 
             <Form.Item className="text-center mt-6">
-              <Button htmlType='submit' style={{ backgroundColor:"#2461CB" , width:"100%" , height:"45px" , color:"white"}} className="bg-[] px-6 py-3 w-full text-[#FEFEFE] rounded-md">
+              <Button
+                htmlType="submit"
+                style={{
+                  backgroundColor: "#2461CB",
+                  width: "100%",
+                  height: "45px",
+                  color: "white",
+                }}
+                className="bg-[] px-6 py-3 w-full text-[#FEFEFE] rounded-md"
+              >
                 create Admin
               </Button>
             </Form.Item>
           </Form>
         </div>
       </Modal>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default MakeAdminModal;

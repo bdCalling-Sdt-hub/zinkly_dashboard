@@ -6,24 +6,24 @@ import { BiCalendarCheck } from "react-icons/bi";
 import { FaHotTubPerson } from "react-icons/fa6";
 import { LuUser } from "react-icons/lu";
 import { IoSettingsOutline } from "react-icons/io5";
-import {  MdOutlineDashboard } from "react-icons/md";
+import { MdOutlineDashboard } from "react-icons/md";
 import { FaStore, FaFire } from "react-icons/fa";
 import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
-import { FiUserPlus, FiLogOut } from "react-icons/fi"; 
-import musician from "../../assets/guitarist.png"
+import { FiUserPlus, FiLogOut } from "react-icons/fi";
+import musician from "../../assets/guitarist.png";
 
-import {
-  RiNotification2Line,
-} from "react-icons/ri";
+import { RiNotification2Line } from "react-icons/ri";
 import { calc } from "antd/es/theme/internal";
+import { useGetUserProfileQuery } from "../../redux/api/slices/userApi";
+import { imageUrl } from "../../redux/api/baseApi";
 const { Header, Sider, Content } = Layout;
 
-
 const Dashboard = () => {
+  const { data: user } = useGetUserProfileQuery({});
   const [setting, setSetting] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  console.log(setting);
+  // console.log(setting);
   const handleLogOut = () => {
     navigate("/login");
     window.location.reload();
@@ -43,7 +43,7 @@ const Dashboard = () => {
     {
       title: "Musician",
       path: "/musician",
-      icon: <FaHotTubPerson  size={24} /> ,
+      icon: <FaHotTubPerson size={24} />,
     },
     {
       title: "Booking",
@@ -84,7 +84,7 @@ const Dashboard = () => {
         },
       ],
     },
-   
+
     {
       title: "Log out",
       path: "/login",
@@ -121,7 +121,6 @@ const Dashboard = () => {
             <img src={Logo} height="40px" />
           </Link>
         </div>
-
 
         <ul
           style={{
@@ -192,7 +191,7 @@ const Dashboard = () => {
                           to={optionItem.path}
                           key={optionIndex}
                           style={{
-                            // width: "150px", 
+                            // width: "150px",
                             height: "50px",
                             borderRadius: "0 10px 10px 0",
                             width: "100%",
@@ -335,7 +334,7 @@ const Dashboard = () => {
               }}
             >
               <img
-                src="https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__"
+                src={`${imageUrl}/${user?.profile}`}
                 style={{
                   width: "44px",
                   height: "44px",
@@ -353,7 +352,7 @@ const Dashboard = () => {
                   width: 200,
                 }}
               >
-               Mithila
+                {user?.name}
               </h2>
             </Link>
           </div>
