@@ -13,7 +13,14 @@ export const baseApi = createApi({
       }
     },
   }),
-  tagTypes: ["Faq", "User", "Privacy-Policy", "Category", "Disclaimer"],
+  tagTypes: [
+    "Faq",
+    "User",
+    "Privacy-Policy",
+    "Category",
+    "Disclaimer",
+    "Terms",
+  ],
   endpoints: () => ({}),
 });
 
