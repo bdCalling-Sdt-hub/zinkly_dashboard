@@ -20,6 +20,7 @@ export const baseApi = createApi({
     "Category",
     "Disclaimer",
     "Terms",
+    "Artist",
   ],
   endpoints: () => ({}),
 });

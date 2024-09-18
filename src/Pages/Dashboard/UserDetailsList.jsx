@@ -171,6 +171,7 @@ const UserDetailsList = () => {
       >
         <div>
           <Table
+            loading={isFetching}
             columns={columns}
             dataSource={users?.data}
             pagination={{

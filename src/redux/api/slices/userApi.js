@@ -71,5 +71,4 @@ export const {
   useGetUserProfileQuery,
   useUpdateUserProfileImageMutation,
   useUpdateUserProfileMutation,
-  use,
 } = userApi;
