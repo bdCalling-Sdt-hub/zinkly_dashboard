@@ -104,7 +104,7 @@ const TotalSellerChart = () => {
           </p>
         </Dropdown>
       </div>
-      <ResponsiveContainer width={"100%"} height={300}>
+      <ResponsiveContainer width={"100%"} height={420}>
         <BarChart data={totalEarningStats} barGap={100}>
           <CartesianGrid horizontal vertical={false} />
           <XAxis

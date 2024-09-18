@@ -40,16 +40,23 @@ const Category = () => {
       cancelButtonText: "No",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = await deleteCategory(id).unwrap();
-        if (res.success) {
-          Swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
-            icon: "success",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
+        // Show the success alert first
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1000,
+        }).then(async () => {
+          // Delete the category after the success alert
+          try {
+            await deleteCategory(id).unwrap();
+            // Optionally handle any additional success logic here
+          } catch (error) {
+            // Handle errors here if needed
+            console.error("Error deleting category:", error);
+          }
+        });
       }
     });
   };
@@ -264,14 +271,15 @@ const Category = () => {
             columns={columns}
             style={{}}
             dataSource={categories}
-            pagination={{
-              pageSize: 10,
-              defaultCurrent: parseInt(page),
-              onChange: handlePageChange,
-              total: 85,
-              showTotal: (total, range) =>
-                `Showing ${range[0]}-${range[1]} out of ${total}`,
-            }}
+            pagination={false}
+            // pagination={{
+            //   pageSize: 10,
+            //   defaultCurrent: parseInt(page),
+            //   onChange: handlePageChange,
+            //   total: 85,
+            //   showTotal: (total, range) =>
+            //     `Showing ${range[0]}-${range[1]} out of ${total}`,
+            // }}
           />
         </div>
       </div>

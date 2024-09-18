@@ -21,29 +21,31 @@ const UserDetailsModal = ({ open, setOpen, modalData }) => {
             />
             <p className="text-lg font-semibold">User Information </p>
           </div>
-          <div className="flex  justify-center items-center gap-3">
-            <div>
-              <div className=" w-full flex ">
+          <div className="flex  justify-center items-center gap-3 w-full">
+            <div className="w-full">
+              <div className=" w-full flex justify-between   ">
                 <p className="w-1/2 text-sm font-semibold mb-1">Name:</p>
-                <p className=" w-1/2 text-sm text-start">{modalData?.name}</p>
+                <p className=" w-1/2 text-nowrap text-sm text-start ">
+                  {modalData?.name}
+                </p>
               </div>
 
               <div className=" w-full flex my-2">
                 <p className="w-1/2 text-sm font-semibold mb-1">Email:</p>
-                <p className=" w-1/2 text-sm text-start text-nowrap">
+                <p className=" w-1/2 text-nowrap text-sm text-start">
                   {modalData?.email}
                 </p>
               </div>
 
               <div className=" w-full flex ">
                 <p className="w-1/2 text-sm font-semibold mb-1">Address:</p>
-                <p className=" w-1/2 text-sm text-start">
+                <p className=" w-1/2 text-nowrap text-sm text-start">
                   {modalData?.location}
                 </p>
               </div>
               <div className=" w-full flex my-2 ">
                 <p className="w-1/2 text-sm font-semibold mb-1">Contact No:</p>
-                <p className=" w-1/2 text-sm text-start">
+                <p className=" w-1/2 text-nowrap text-sm text-start">
                   {modalData?.contact}
                 </p>
               </div>

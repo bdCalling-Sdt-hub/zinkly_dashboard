@@ -4,8 +4,6 @@ import TotalSellerChart from "./TotalSellerChart";
 import DailyOverviewChart from "./DailyOverviewChart";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { GrMoney } from "react-icons/gr";
-
-import Title from "../../../Shared/Title";
 import { useGetTotalBookingStatsQuery } from "../../../redux/api/slices/dashboardApi";
 
 function DashboardHome() {
@@ -23,21 +21,21 @@ function DashboardHome() {
       name: "Total User",
       count: totalUser,
       textColor: "#6A5ECC",
-      icon: <HiMiniUserGroup color="#6A5ECC" size={24} />,
+      icon: <HiMiniUserGroup color="#6A5ECC" size={40} />,
       bgColor: "#E5E5E5",
     },
     {
       name: "Total Artist",
       count: totalArtist,
       textColor: "#3F0D47",
-      icon: <HiMiniUserGroup color="#6A5ECC" size={24} />,
+      icon: <HiMiniUserGroup color="#6A5ECC" size={40} />,
       bgColor: "#E5E5E5",
     },
     {
       name: "Total Earning",
       count: balance?.totalIncome,
       textColor: "#00B047",
-      icon: <GrMoney color="#00B047" size={24} />,
+      icon: <GrMoney color="#00B047" size={40} />,
       bgColor: "#E5E5E5",
     },
 
@@ -45,15 +43,14 @@ function DashboardHome() {
       name: "Total Revenue",
       count: balance?.totalRevenue,
       textColor: "#00B047",
-      icon: <GrMoney color="#00B047" size={24} />,
+      icon: <GrMoney color="#00B047" size={40} />,
       bgColor: "#E5E5E5",
     },
   ];
 
   return (
     <div>
-      <Title className="">Dashboard</Title>
-      <div className="grid grid-cols-4 gap-3 items-center mt-4">
+      <div className="grid grid-cols-4  gap-4 items-center mt-4">
         {data.map((item, index) => (
           <div
             key={index}
@@ -67,8 +64,8 @@ function DashboardHome() {
             <div
               style={{
                 background: `${item.bgColor}`,
-                width: "44px",
-                height: "44px",
+                width: "100px",
+                height: "100px",
                 borderRadius: "100%",
                 display: "flex",
                 flexDirection: "row",
@@ -127,7 +124,7 @@ function DashboardHome() {
             borderRadius: "15px",
             backgroundColor: "#fff",
             width: "100%",
-            height: "370px",
+            height: "550px",
             padding: "10px 20px 20px 20px",
           }}
         >
@@ -138,7 +135,7 @@ function DashboardHome() {
             borderRadius: "15px",
             backgroundColor: "#fff",
             width: "100%",
-            height: "370px",
+            height: "550px",
             padding: "10px 20px 20px 20px",
           }}
         >

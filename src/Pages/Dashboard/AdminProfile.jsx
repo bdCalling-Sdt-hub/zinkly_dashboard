@@ -273,7 +273,6 @@ const AdminProfile = () => {
                     name="name"
                     rules={[
                       {
-                        required: true,
                         message: "Please input your user name!",
                       },
                     ]}
@@ -293,9 +292,7 @@ const AdminProfile = () => {
                   <Form.Item
                     label="Email"
                     name="email"
-                    rules={[
-                      { required: true, message: "Please input your email!" },
-                    ]}
+                    rules={[{ message: "Please input your email!" }]}
                   >
                     <Input
                       placeholder="Camille@gmail.com"
@@ -314,7 +311,6 @@ const AdminProfile = () => {
                     name="contact"
                     rules={[
                       {
-                        required: true,
                         message: "Please input your contact no!",
                       },
                     ]}
@@ -334,9 +330,7 @@ const AdminProfile = () => {
                   <Form.Item
                     label="Address"
                     name="location"
-                    rules={[
-                      { required: true, message: "Please input your address!" },
-                    ]}
+                    rules={[{ message: "Please input your address!" }]}
                   >
                     <Input
                       placeholder="79/A Joker Vila, Gotham City"

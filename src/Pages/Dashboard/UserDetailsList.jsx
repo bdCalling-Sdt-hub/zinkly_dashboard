@@ -75,7 +75,12 @@ const UserDetailsList = () => {
                 borderRadius: 8,
                 backgroundSize: "cover",
               }}
-              src={`${imageUrl}/${record?.profile}`}
+              src={
+                record?.profile ===
+                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                  ? record?.profile
+                  : `${imageUrl}/${record?.profile}`
+              }
               alt="ok"
             />
             <p

@@ -121,7 +121,7 @@ const DailyOverviewChart = () => {
             <h1 style={{fontSize: "14px", fontWeight: 700, color: "#2F2F2F"}}>58.50%</h1>
           </div>
     </div> */}
-      <ResponsiveContainer width={"100%"} height={300}>
+      <ResponsiveContainer width={"100%"} height={420}>
         <LineChart data={totalUserStats} barGap={100}>
           <CartesianGrid horizontal vertical={false} />
           <XAxis
