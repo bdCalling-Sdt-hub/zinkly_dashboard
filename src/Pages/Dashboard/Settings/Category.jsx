@@ -289,7 +289,7 @@ const Category = () => {
         body={<AddCategory handleAddCategory={handleAddCategory} form={form} />}
         open={openModal}
         setOpen={setOpenModal}
-        width={500}
+        // width={500} 
         key={"category-modal"}
       />
       <Modal
@@ -299,7 +299,7 @@ const Category = () => {
         }
         open={updateModal}
         setOpen={setUpdateModal}
-        width={500}
+        // width={500} 
         key={"category-modal-update"}
       />
     </div>

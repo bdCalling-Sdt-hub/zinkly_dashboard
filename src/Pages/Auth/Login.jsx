@@ -14,9 +14,10 @@ const Login = () => {
       rememberMe: values.remember,
     };
 
-    // // login user
+    // login user
     try {
-      const res = await loginUser(loginUserInfo).unwrap();
+      const res = await loginUser(loginUserInfo).unwrap(); 
+      console.log(res);
       if (res.success) {
         notification.success({
           message: res.message,
